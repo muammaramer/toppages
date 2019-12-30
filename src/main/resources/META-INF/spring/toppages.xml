@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-3.0.xsd">
+
+
+    <bean class="org.jahia.modules.actions.UpdateTopPagesAction">
+        <property name="name" value="updateTopPages"/>
+    </bean>
+    <bean class="org.jahia.modules.actions.GetTopPagesAction">
+        <property name="name" value="getTopPages"/>
+    </bean>
+
+<!-- Initializer -->
+    <bean id="rbInitializer" class="org.jahia.services.content.nodetypes.initializers.ResourceBundleChoiceListInitializerImpl"/>
+    <bean id="choiceListInitializers" class="org.jahia.services.content.nodetypes.initializers.ChoiceListInitializerService" factory-method="getInstance">
+        <property name="initializers">
+            <map>
+                <entry key="resourceBundle" value-ref="rbInitializer"/>
+            </map>
+        </property>
+    </bean>
+
+    <bean id="sitesConfigInitializer" class="org.jahia.modules.ChoiceListInitializer">
+        <property name="key" value="sitesConfigInitializer"/>
+        <property name="configurationUtil" ref="configurationUtil"/>
+    </bean>
+    <!-- End initilizer -->
+
+
+    <bean id="configurationUtil" class="org.jahia.modules.utils.ConfigurationUtil">
+        <property name="key" value="configurationUtil"/>
+        <property name="jcrTemplate" ref="jcrTemplate"/>
+    </bean>
+
+    <bean id="topPages" class="org.jahia.modules.TopPages">
+        <property name="key" value="topPages"/>
+        <property name="configurationUtil" ref="configurationUtil"/>
+    </bean>
+
+    <bean class="org.jahia.services.content.rules.ModuleGlobalObject">
+        <property name="globalRulesObject">
+            <map>
+                <entry key="topPagesService">
+                    <bean class="org.jahia.modules.TopPagesService">
+                    </bean>
+                </entry>
+            </map>
+        </property>
+    </bean>
+
+
+    <bean parent="jobSchedulingBean">
+        <property name="ramJob" value="false"/>
+        <property name="trigger">
+            <bean class="org.quartz.CronTrigger">
+                <property name="name" value="ReferentielJobTrigger"/>
+                <property name="cronExpression" value="${topPagesCronExp:0 0 12 1 * ?}"/>
+            </bean>
+        </property>
+        <property name="jobDetail">
+            <bean class="org.springframework.scheduling.quartz.JobDetailBean">
+                <property name="name" value="Top Pages"/>
+                <property name="group" value="Jahia Top Pages module"/>
+                <property name="jobClass" value="org.jahia.modules.UpdateTopPagesJob"/>
+                <property name="description" value="Update top pages"/>
+            </bean>
+        </property>
+    </bean>
+
+</beans>

@@ -1,0 +1,30 @@
+package org.jahia.modules.toppages.rules
+
+// list any import classes here.
+import org.jahia.services.content.rules.*
+import org.jahia.services.content.JCRContentUtils
+import org.slf4j.Logger
+import org.jahia.modules.TopPages
+import org.jahia.modules.TopPagesService
+
+expander rules.dsl
+
+// declare any global variables here
+global User user
+global Service service
+global Logger logger
+global JCRContentUtils jcrUtils
+global TopPages topPages
+global TopPagesService topPagesService
+
+rule "update top pages"
+    when
+        A property numberOfResults has been set on a node ||  A property nMonths has been set on a node || A property customCSS has been set on a node
+        || A property overrideConfig has been set on a node || A property jahiaSite has been set on a node || A property includeFilter has been set on a node
+        || A property excludeFilter has been set on a node
+            - the node has the type jtopmix:topPages
+
+    then
+        Log "TopPages: Configuration changed, the node: " + node.getPath() + " is being updated by a rule"
+        update top pages for node
+end

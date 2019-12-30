@@ -1,0 +1,28 @@
+<jmix = 'http://www.jahia.org/jahia/mix/1.0'>
+<jnt = 'http://www.jahia.org/jahia/nt/1.0'>
+<jtopmix = 'http://www.jahia.org/toppages/jahia/mix/1.0'>
+<mix = 'http://www.jcp.org/jcr/mix/1.0'>
+
+[jtopmix:JahiaTopPages] > jmix:droppableContent, jmix:editorialContent mixin
+
+[jtopmix:topPages] > jnt:content, jtopmix:JahiaTopPages, mix:title
+ - jcr:title (string)
+ - jahiaSite (string, choicelist[sitesConfigInitializer])
+ - numberOfResults (long) = '5'
+ - nMonths (string) = '3'
+ - overrideConfig (boolean) = 'false'
+ - awStatsUrl (string) = 'Global Configuration'
+ - includeFilter (string) = 'Global Configuration'
+ - excludeFilter (string) = 'Global Configuration'
+ - jsonResult (string, text[resourceBundle]) hidden
+ - lastErrorReceived (string) hidden
+ - customCSS (string)
+
+[jtopmix:topPagesConfiguration] > jnt:content, jtopmix:JahiaTopPages, mix:title, jmix:studioOnly
+
+[jtopmix:siteConfig] > jnt:content, jtopmix:JahiaTopPages, mix:title, jmix:studioOnly
+ - siteName (undefined)
+ - awStatsUrl (string)
+ - includeFilter (string)
+ - excludeFilter (string)
+

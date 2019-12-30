@@ -1,13 +1,13 @@
 # Jahia TopPages
-a Jahia Community module to get the top pages from awstats.pl script.
+a Jahia Community module to get the top pages from Awstats.pl script.
 
 # Usage
 1. Install the module and enable it on System Site and required site
 2. Go to Jahia Administration > Configuration > Top Pages Configuration
-3. Add AWStats configuration: You can add the site url a regEx for the aws inclusion Filter and a regEx for the exclusion filter.
+3. Add AWStats configuration: You can add the site url a regEx for the Awstats inclusion Filter and a regEx for the exclusion filter.
 4. After adding the configuration. Go to any page and add a top pages node. You may configure the following properties:
     - Number of Results to display
-    - Number of Months to aggregate (this will aggregate results for the past N month)
+    - Number of Months to aggregate (this will aggregate results for the past N months)
     - Override the Global configuration if needed
 5. Publish the node
 # Main Features

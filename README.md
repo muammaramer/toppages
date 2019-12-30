@@ -1,4 +1,4 @@
-# toppages
+# Jahia TopPages
 a Jahia Community module to get the top pages from awstats.pl script.
 
 # Usage

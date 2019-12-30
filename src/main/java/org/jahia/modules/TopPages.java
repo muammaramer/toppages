@@ -307,15 +307,14 @@ public class TopPages {
                 node.setProperty(P_JSONRESULT, result.toString());
                 node.setProperty(P_LASTERROR, "");
             } else {
-                logger.error("TopPages: Unable to update the top pages results, null result received, {}", this.errorMessages);
+                logger.error("Unable to update the top pages results, null result received, {}", this.errorMessages);
                 node.setProperty(P_LASTERROR, this.errorMessages.toString());
             }
 
             node.saveSession();
-
-            logger.info("TopPages: updated top pages for node {} ", node.getPath());
+            logger.info("updated top pages for node {} ", node.getPath());
         } catch (RepositoryException e) {
-            logger.error("TopPages: error updating top pages", e);
+            logger.error("error updating top pages", e);
         }
     }
 

@@ -86,7 +86,7 @@ public class SiteconfigFlowHandler implements Serializable {
 
     public boolean saveSiteConfiguration(final SiteConfiguration site, MessageContext messageContext) {
         if (logger.isDebugEnabled()) {
-            logger.debug("TopPages: Saving new Site configuration: {}", site);
+            logger.debug("Saving new Site configuration: {}", site);
         }
 
         boolean created = true;
@@ -130,7 +130,7 @@ public class SiteconfigFlowHandler implements Serializable {
                                 }
                             } catch (ItemExistsException e) {
                                 jcrOk = false;
-                                logger.warn("TopPages: A site with the same name already exists");
+                                logger.warn("A site with the same name already exists");
                             }
                             session.save();
                             return jcrOk ? null : itemAlreadyExistsMessage;
@@ -190,7 +190,7 @@ public class SiteconfigFlowHandler implements Serializable {
                     }
             );
         } catch (RepositoryException e) {
-            logger.error("Toppages: Failed to set the selected site", e);
+            logger.error("Failed to set the selected site", e);
 
         }
         return null;
@@ -234,7 +234,7 @@ public class SiteconfigFlowHandler implements Serializable {
 
     public boolean updateSiteConfiguration(final SiteConfiguration siteConfig, MessageContext messageContext) {
         if (logger.isDebugEnabled()) {
-            logger.debug("TopPages: Saving new Site configuration: {}",siteConfig.toString());
+            logger.debug("Saving new Site configuration: {}",siteConfig.toString());
         }
 
         boolean updated = true;
@@ -263,7 +263,7 @@ public class SiteconfigFlowHandler implements Serializable {
 
                                 session.save();
                             } catch (ItemExistsException e) {
-                                logger.warn("TopPages: Unable to update site configuration, a site configuration with the same name already exists", e);
+                                logger.warn("Unable to update site configuration, a site configuration with the same name already exists", e);
                                 return siteConfig.getMessage("configUpdate", "toppages.form.error.alreadyExist");
                             }
                             return null;

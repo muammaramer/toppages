@@ -32,7 +32,7 @@ public class UpdateTopPagesJob extends QuartzJobBean {
     }
 
     private void updateWorkspace(String workspace) {
-        logger.info("TopPages Update Job: updating workspace: {}", workspace);
+        logger.info("Cron Job: updating workspace: {}", workspace);
         JCRSessionWrapper jcrSessionWrapper = null;
         final String query = "select * from [jtopmix:topPages]";
         try {
@@ -47,10 +47,10 @@ public class UpdateTopPagesJob extends QuartzJobBean {
                 topPages.updateTopPages(node);
             }
 
-            logger.info("TopPages Update Job: All top pages nodes have been updated in workspace: {}", workspace);
+            logger.info("Cron Job: All top pages nodes have been updated in workspace: {}", workspace);
 
         } catch (RepositoryException e) {
-            logger.info("An exception occured while updating the top pages", e);
+            logger.info("An exception occurred while updating the top pages in the cron Job", e);
         }
     }
 }

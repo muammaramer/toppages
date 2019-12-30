@@ -1,5 +1,5 @@
 # Jahia TopPages
-a Jahia Community module to get the top pages from Awstats.pl script.
+a Jahia Community module to get the top visted pages from Awstats.pl script.
 
 # Usage
 1. Install the module and enable it on System Site and required site

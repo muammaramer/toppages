@@ -31,14 +31,7 @@
 
 <c:set var="customCSS" value="${currentNode.properties['customCSS'].string}"/>
 
-<c:if test="${not empty customCSS}">
-    <template:addResources>
-        <style type="text/css">
-            ${customCSS}
-        </style>
-    </template:addResources>
 
-</c:if>
 
 <c:if test="${renderContext.editMode}">
 
@@ -65,6 +58,8 @@
 </div>
 
 
+
+
 <template:addResources>
     <script language="JavaScript">
 
@@ -87,7 +82,7 @@
 
                         var divHtml = "<h3>"+ title+"</h3>";
 
-                        divHtml += "<ul>"
+                      divHtml += "<ul class = ${empty customCSS ? "topPages" : customCSS} >"
                         $.each(text.topPages, function (i, page) {
                             divHtml += "<li> <a href=\"" + page.href + "\">" + page.title + "</a> </li>";
                         });

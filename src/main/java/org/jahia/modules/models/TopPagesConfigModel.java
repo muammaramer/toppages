@@ -34,7 +34,6 @@ public class TopPagesConfigModel implements Serializable {
         this.selectedSiteName = selectedSiteName;
     }
 
-
     public List<SiteConfiguration> getSiteConfigList() {
         return siteConfigList;
     }

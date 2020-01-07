@@ -25,8 +25,6 @@
 <jcr:node path="/sites" var="sitesVar"/>
 
 <div class="container">
-
-
     <div class="row-fluid">
         <div class="col-lg-8">
             <div class="text-center h5"><b> <fmt:message key="toppages.config.title"/></b></div>
@@ -41,9 +39,7 @@
 
                         </c:otherwise>
                     </c:choose>
-
                 </div>
-
                 <div class="panel-body">
                     <form:form name="createSiteConfig" action="${flowExecutionUrl}" method="post"
                                modelAttribute="siteConfiguration">
@@ -67,7 +63,6 @@
                                 <strong><form:errors path="includeFilter"/></strong>
                             </div>
                         </div>
-
                         <div class="form-group-sm">
                             <label for="excludeFilter"><fmt:message key="lbl.excludeFilter"/></label>
                             <form:input class="form-control" id="excludeFilter" path="excludeFilter"/>
@@ -75,7 +70,6 @@
                                 <strong><form:errors path="excludeFilter"/></strong>
                             </div>
                         </div>
-
                         <div class="form-group">
                             <c:choose>
                                 <c:when test="${siteConfiguration.toBeUpdated}">
@@ -97,7 +91,6 @@
                             </button>
                         </div>
                     </form:form>
-
                 </div>
             </div>
         </div>

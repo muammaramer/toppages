@@ -23,15 +23,13 @@
 
 <c:set var="getActionUrl" value="${url.base}${currentNode.path}.getTopPages.do"/>
 <c:set var="updateActionUrl" value="${url.base}${currentNode.path}.updateTopPages.do"/>
-
-<c:set var="resultDiv" value="result-${currentNode.name}"/>
-<c:set var="messagesDiv" value="messages-${currentNode.name}"/>
-<c:set var="updateButton" value="updateBtn-${currentNode.name}"/>
+<c:set var="parentName" value ="${currentNode.parent.name}"/>
+<c:set var="resultDivID" value="result-${currentNode.name}-${parentName}"/>
+<c:set var="messagesDivID" value="messages-${currentNode.name}-${parentName}"/>
+<c:set var="updateButtonID" value="updateBtn-${currentNode.name}-${parentName}"/>
 <c:set var="title" value="${currentNode.properties['jcr:title'].string}"/>
 
 <c:set var="customCSS" value="${currentNode.properties['customCSS'].string}"/>
-
-
 
 <c:if test="${renderContext.editMode}">
 
@@ -43,32 +41,30 @@
 
     </c:if>
 
-    <div id="${messagesDiv}" style="display: none;">
+    <div id="${messagesDivID}" style="display: none;">
+
         <button type="button" class="close" data-dismiss="alert">&times;</button>
         <div id="message">
         </div>
     </div>
 
-    <button type="submit" id="${updateButton}" type="button" class="btn btn-primary"> Update Top Pages</button>
+    <button type="submit" id="${updateButtonID}" type="button" class="btn btn-primary"> Update Top Pages</button>
 
 </c:if>
 
-<div id="${resultDiv}">
+<div id="${resultDivID}">
 
 </div>
-
-
-
 
 <template:addResources>
     <script language="JavaScript">
 
         $(document).ready(function () {
-            var resultDiv = $('#${resultDiv}');
-            var messagesDiv = $("#${messagesDiv}");
+            var resultDiv = $('#${resultDivID}');
+            var messagesDiv = $("#${messagesDivID}");
             var title = "${title}";
             getTopPages("${getActionUrl}", resultDiv,messagesDiv,title,false);
-            $("#${updateButton}").click(function () {
+            $("#${updateButtonID}").click(function () {
                 getTopPages("${updateActionUrl}", resultDiv,messagesDiv,title,true);
             });
         });
@@ -118,7 +114,6 @@
                 });
 
         }
-
 
     </script>
 </template:addResources>

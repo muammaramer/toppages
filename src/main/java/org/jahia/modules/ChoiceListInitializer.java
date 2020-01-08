@@ -14,7 +14,6 @@ import java.util.Locale;
 import java.util.Map;
 
 public class ChoiceListInitializer implements ModuleChoiceListInitializer {
-    Logger logger = LoggerFactory.getLogger(ChoiceListInitializer.class);
     private String key;
 
     @Autowired
@@ -29,7 +28,6 @@ public class ChoiceListInitializer implements ModuleChoiceListInitializer {
             ExtendedPropertyDefinition epd, String param,
             List<ChoiceListValue> values, Locale locale,
             Map<String, Object> context) {
-
         List<ChoiceListValue> choiceListValues = new ArrayList<>();
         ArrayList<String> sitesList = (ArrayList) configurationUtil.getSitesConfigList();
         for (String s : sitesList) {

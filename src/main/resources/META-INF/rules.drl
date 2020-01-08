@@ -19,9 +19,7 @@ global TopPagesService topPagesService
 
 rule "update top pages"
     when
-        A property numberOfResults has been set on a node ||  A property nMonths has been set on a node || A property customCSS has been set on a node
-        || A property overrideConfig has been set on a node || A property jahiaSite has been set on a node || A property includeFilter has been set on a node
-        || A property excludeFilter has been set on a node
+        A property numberOfResults has been set on a node ||  A property nMonths has been set on a node || A property customCSS has been set on a node || A property overrideConfig has been set on a node || A property jahiaSite has been set on a node || A property includeFilter has been set on a node || A property excludeFilter has been set on a node
             - the node has the type jtopmix:topPages
 
     then

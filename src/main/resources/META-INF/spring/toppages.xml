@@ -9,23 +9,15 @@
     </bean>
     <bean class="org.jahia.modules.actions.GetTopPagesAction">
         <property name="name" value="getTopPages"/>
+        <property name="requireAuthenticatedUser" value="false" />
     </bean>
 
 <!-- Initializer -->
-    <bean id="rbInitializer" class="org.jahia.services.content.nodetypes.initializers.ResourceBundleChoiceListInitializerImpl"/>
-    <bean id="choiceListInitializers" class="org.jahia.services.content.nodetypes.initializers.ChoiceListInitializerService" factory-method="getInstance">
-        <property name="initializers">
-            <map>
-                <entry key="resourceBundle" value-ref="rbInitializer"/>
-            </map>
-        </property>
-    </bean>
-
     <bean id="sitesConfigInitializer" class="org.jahia.modules.ChoiceListInitializer">
         <property name="key" value="sitesConfigInitializer"/>
         <property name="configurationUtil" ref="configurationUtil"/>
     </bean>
-    <!-- End initilizer -->
+ <!-- End initilizer -->
 
 
     <bean id="configurationUtil" class="org.jahia.modules.utils.ConfigurationUtil">

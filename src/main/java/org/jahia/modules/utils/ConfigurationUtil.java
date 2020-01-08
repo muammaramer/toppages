@@ -8,12 +8,14 @@ import org.jahia.services.content.JCRTemplate;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
 
 import javax.jcr.NodeIterator;
 import javax.jcr.PathNotFoundException;
 import javax.jcr.RepositoryException;
 import java.util.ArrayList;
 import java.util.List;
+
 
 public class ConfigurationUtil {
     static Logger logger = LoggerFactory.getLogger(ConfigurationUtil.class);

@@ -27,10 +27,11 @@
 <c:set var="messagesDivID" value="messages-${currentNode.name}-${parentName}"/>
 <c:set var="updateButtonID" value="updateBtn-${currentNode.name}-${parentName}"/>
 <c:set var="title" value="${currentNode.properties['jcr:title'].string}"/>
-<c:set var="customCSS" value="${currentNode.properties['customCSS'].string}"/>
+<c:set var="customCSS" value="${currentNode.properties.customCss.string}"/>
+<c:set var="jsonResult" value="${currentNode.properties.jsonResult.string}"/>
 
 <c:if test="${renderContext.editMode}">
-    <c:set var="updateError" value="${currentNode.properties['lastErrorReceived'].string}"/>
+    <c:set var="updateError" value="${currentNode.properties.lastErrorReceived.string}"/>
     <c:if test="${not empty updateError}">
         <div class="alert alert-danger">
             <p><b> <fmt:message key="toppages.result.error"/> </b> <br> ${updateError} </p>
@@ -44,6 +45,7 @@
     <button type="submit" id="${updateButtonID}" type="button" class="btn btn-primary"> Update Top Pages</button>
 </c:if>
 
+
 <div id="${resultDivID}">
 
 </div>
@@ -53,50 +55,75 @@
         $(document).ready(function () {
             var resultDiv = $('#${resultDivID}');
             var messagesDiv = $("#${messagesDivID}");
+            var jsonResult = ${jsonResult};
             var title = "${title}";
-            getTopPages("${getActionUrl}", resultDiv, messagesDiv, title, false);
+            getTopPages(jsonResult, resultDiv, messagesDiv, title);
             $("#${updateButtonID}").click(function () {
-                getTopPages("${updateActionUrl}", resultDiv, messagesDiv, title, true);
+                updateTopPages("${updateActionUrl}", resultDiv, messagesDiv, title);
             });
         });
 
-        function getTopPages(actionUrl, resultDiv, messagesDiv, title, update) {
-            console.info("getting topPages");
-            $.getJSON(actionUrl,
-                function (text) {
-                    if (text.topPages) {
-                        var divHtml = "<h3>" + title + "</h3>";
-                        divHtml += "<ul class = ${empty customCSS ? "topPages" : customCSS} >"
-                        $.each(text.topPages, function (i, page) {
-                            divHtml += "<li> <a href=\"" + page.href + "\">" + page.title + "</a> </li>";
-                        });
-                        divHtml += "</ul>";
-                        resultDiv.html(divHtml);
-                        if (update) {
-                            messagesDiv.find('#message').html("Top pages updated");
-                            messagesDiv.removeClass();
-                            messagesDiv.addClass("alert alert-success");
-                            messagesDiv.show();
-                        }
-                    }
-                    if (text.errorMessages) {
-                        var errors = text.errorMessages;
-                        var msgs = "";
-                        errors.forEach(function (msg) {
-                            msgs += msg + "\n";
+        function getTopPages(jsonResult, resultDiv, messagesDiv, title) {
+            if (jsonResult != null) {
+                displayResult(jsonResult, resultDiv, messagesDiv, title, false);
+            }
+        }
 
-                        });
-                        messagesDiv.find('#message').html(msgs);
-                        messagesDiv.removeClass();
-                        messagesDiv.addClass("alert alert-danger");
-                        messagesDiv.show();
+        function updateTopPages(actionUrl, resultDiv, messagesDiv, title) {
+            $.getJSON(actionUrl,
+                function (result) {
+                    if (result) {
+                        displayResult(result, resultDiv, messagesDiv, title, true);
                     }
-                    messagesDiv.on("close.bs.alert", function () {
-                        messagesDiv.hide();
-                        return false;
-                    });
                 });
         }
+
+        function displayResult(text, resultDiv, messagesDiv, title, update) {
+            var divHtml = "";
+            if (title) {
+                divHtml = "<h3>" + title + "</h3>";
+            }
+
+            if (text) {
+                divHtml += "<ul class = ${empty customCSS ? "topPages" : customCSS} >"
+                $.each(text.topPages, function (i, page) {
+                    divHtml += "<li> <a href=\"" + page.href + "\">" + page.title + "</a> </li>";
+                });
+                divHtml += "</ul>";
+            }
+            resultDiv.html(divHtml);
+            if (text.errorMessages) {
+                var errors = result.errorMessages;
+                var msgs = "";
+                errors.forEach(function (msg) {
+                    msgs += msg + "\n";
+                });
+                displayMessage(msgs, messagesDiv, "alert");
+                return;
+            }
+
+            if (update) {
+                displayMessage("Top Pages Updated", messagesDiv, "success");
+            }
+        }
+
+        function displayMessage(message, messagesDiv, alertType) {
+            if (message) {
+                messagesDiv.find('#message').html(message);
+                messagesDiv.removeClass();
+                if (alertType == "success")
+                    messagesDiv.addClass("alert alert-success");
+                else if (alertType == "error")
+                    messagesDiv.addClass("alert alert-danger");
+
+                messagesDiv.show();
+            }
+            messagesDiv.on("close.bs.alert", function () {
+                messagesDiv.hide();
+                return false;
+            });
+        }
+
     </script>
 </template:addResources>
 

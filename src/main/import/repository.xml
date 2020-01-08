@@ -7,26 +7,6 @@
                 j:title="topPages"
                 jcr:mixinTypes="jmix:hasExternalProviderExtension"
                 jcr:primaryType="jnt:module">
-                <sources jcr:mixinTypes="jmix:hasExternalProviderExtension jmix:sourceControl"
-                  jcr:primaryType="jnt:moduleVersionFolder"
-                  j:staticMountPointProviderKey="module-toppages-1.0">
-                    <src jcr:mixinTypes="jmix:hasExternalProviderExtension jmix:sourceControl"
-                 jcr:primaryType="jnt:folder">
-                        <main jcr:mixinTypes="jmix:hasExternalProviderExtension jmix:sourceControl"
-                     jcr:primaryType="jnt:folder">
-                            <resources jcr:mixinTypes="jmix:hasExternalProviderExtension jmix:sourceControl"
-                             jcr:primaryType="jnt:folder">
-                                <jtopmix_topPages jcr:mixinTypes="jmix:hasExternalProviderExtension jmix:sourceControl"
-                                       jcr:primaryType="jnt:nodeTypeFolder">
-                                    <html jcr:mixinTypes="jmix:hasExternalProviderExtension jmix:sourceControl"
-                              jcr:primaryType="jnt:templateTypeFolder">
-                                        <topPages.jsp jcr:mixinTypes="jmix:sourceControl" jcr:primaryType="jnt:viewFile"/>
-                                    </html>
-                                </jtopmix_topPages>
-                            </resources>
-                        </main>
-                    </src>
-                </sources>
                 
                 <portlets jcr:primaryType="jnt:portletFolder"/>
                 <files jcr:primaryType="jnt:folder"/>
@@ -49,16 +29,19 @@
                             <jcr:content jcr:mimeType="image/png" jcr:primaryType="jnt:resource"/>
                             <thumbnail jcr:mimeType="image/png" jcr:primaryType="jnt:resource"/>
                             <thumbnail2 jcr:mimeType="image/png" jcr:primaryType="jnt:resource"/>
+                            <community750 jcr:mimeType="image/png" jcr:primaryType="jnt:resource"/>
                         </top_pages_icon.png>
                     </files>
                     <contents jcr:primaryType="jnt:contentFolder"/>
                     <server-settings-base j:view="serverSettings" jcr:primaryType="jnt:template">
                         <configurations j:hiddenTemplate="false"
-                               j:icon="/modules/serverSettings/templates/files/serveradmin/configurations/configurations.png"
+                               j:icon="#/modules/serverSettings/templates/files/serveradmin/configurations/configurations.png"
+                               j:titleKey="serverSettings.configurations"
+                               jcr:mixinTypes="jmix:rbTitle jmix:vanityUrlMapped"
                                jcr:primaryType="jnt:pageTemplate">
                             <content-template j:defaultTemplate="false"
                                     j:hiddenTemplate="false"
-                                    j:icon="/modules/toppages/templates/files/top_pages_icon.png"
+                                    j:icon="#/modules/toppages/templates/files/top_pages_icon.png"
                                     j:titleKey="toppages.config.title"
                                     jcr:mixinTypes="jmix:rbTitle"
                                     jcr:primaryType="jnt:contentTemplate">
@@ -66,6 +49,20 @@
                                     <top-pages-configuration jcr:primaryType="jtopmix:topPagesConfiguration"/>
                                 </pagecontent>
                             </content-template>
+                            <vanityUrlMapping jcr:primaryType="jnt:vanityUrls">
+                                <configurations j:active="true"
+                                     j:default="false"
+                                     j:file="false"
+                                     j:url="/configurations"
+                                     jcr:language="en"
+                                     jcr:primaryType="jnt:vanityUrl"/>
+                                <configuration j:active="true"
+                                    j:default="true"
+                                    j:file="false"
+                                    j:url="/configuration"
+                                    jcr:language="en"
+                                    jcr:primaryType="jnt:vanityUrl"/>
+                            </vanityUrlMapping>
                         </configurations>
                     </server-settings-base>
                 </templates>

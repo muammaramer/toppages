@@ -20,7 +20,6 @@ import java.util.Locale;
 public class UpdateTopPagesJob extends QuartzJobBean {
 
     Logger logger = LoggerFactory.getLogger(UpdateTopPagesJob.class);
-
     TopPages topPages;
 
     @Override

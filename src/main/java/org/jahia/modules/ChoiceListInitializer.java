@@ -34,9 +34,7 @@ public class ChoiceListInitializer implements ModuleChoiceListInitializer {
             choiceListValues.add(new ChoiceListValue(s, s));
         }
 
-
         return choiceListValues;
-
     }
 
     @Override

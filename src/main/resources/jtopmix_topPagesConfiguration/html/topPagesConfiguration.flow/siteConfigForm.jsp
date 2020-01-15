@@ -18,9 +18,11 @@
 <%--@elvariable id="renderContext" type="org.jahia.services.render.RenderContext"--%>
 <%--@elvariable id="currentResource" type="org.jahia.services.render.Resource"--%>
 <%--@elvariable id="url" type="org.jahia.services.render.URLGenerator"--%>
+<template:addResources type="javascript" resources="popper.js"/>
 <template:addResources type="javascript" resources="jquery.min.js,jquery-ui.min.js"/>
 <template:addResources type="javascript" resources="admin-bootstrap.js"/>
 <template:addResources type="css" resources="bootstrap3.min.css"/>
+<template:addResources type="css" resources="font-awesome.min.css"/>
 
 <jcr:node path="/sites" var="sitesVar"/>
 
@@ -32,10 +34,10 @@
                 <div class="panel-heading">
                     <c:choose>
                         <c:when test="${siteConfiguration.toBeUpdated}">
-                            <strong>  <fmt:message key="toppages.form.titleUpdate"/></strong>
+                            <strong> <fmt:message key="toppages.form.titleUpdate"/></strong>
                         </c:when>
                         <c:otherwise>
-                            <strong>  <fmt:message key="toppages.form.titleNew"/></strong>
+                            <strong> <fmt:message key="toppages.form.titleNew"/></strong>
 
                         </c:otherwise>
                     </c:choose>
@@ -54,7 +56,7 @@
                         <div class="form-group-sm">
                             <label for="reportUrl"><fmt:message key="lbl.awStatsUrl"/></label>
                             <form:input class="form-control" id="reportUrl" path="reportUrl"/>
-                               </div>
+                        </div>
 
                         <div class="form-group-sm">
                             <label for="includeFilter"><fmt:message key="lbl.includeFilter"/></label>
@@ -70,6 +72,26 @@
                                 <strong><form:errors path="excludeFilter"/></strong>
                             </div>
                         </div>
+                        <div class="form-group-lg">
+                            <label>
+                                <form:checkbox value="${siteConfiguration.titleFromHTML}" class="checkbox-inline"
+                                               id="titleFromHTML" path="titleFromHTML"/>
+                                <span><fmt:message key="lbl.titleFromHTML"/></span>
+                                <fmt:message key="lbl.titleFromHTMLDetails" var="titleFromHTMLDetails"/>
+                                <a class="fa fa-exclamation-circle"  data-toggle="tooltip" data-placement="right" data-html="true" title="${titleFromHTMLDetails}">
+                                    Hover for details
+                                </a>
+                            </label>
+                        </div>
+
+                        <div class="form-group-sm">
+                            <label for="titleSeparator"><fmt:message key="lbl.titleSeparator"/></label>
+                            <form:input class="form-control" id="titleSeparator" path="titleSeparator"/>
+                            <div class="text-error">
+                                <strong><form:errors path="titleSeparator"/></strong>
+                            </div>
+                        </div>
+                    <br>
                         <div class="form-group">
                             <c:choose>
                                 <c:when test="${siteConfiguration.toBeUpdated}">
@@ -84,9 +106,9 @@
                                             name="_eventId_saveSiteConfig">
                                         <fmt:message key="lbl.btnSaveConfig"> </fmt:message>
                                     </button>
-                          </c:otherwise>
+                                </c:otherwise>
                             </c:choose>
-                            <button id="createConfig" class="btn btn-primary" onclick="javascript:history.back();">
+                            <button id="createConfig" class="btn btn-secondary" onclick="javascript:history.back();">
                                 <fmt:message key="lbl.btnBack"> </fmt:message>
                             </button>
                         </div>

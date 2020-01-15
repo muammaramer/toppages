@@ -6,7 +6,6 @@ import org.springframework.binding.message.MessageBuilder;
 import org.springframework.binding.message.MessageResolver;
 import org.springframework.context.i18n.LocaleContextHolder;
 
-
 import java.io.Serializable;
 import java.util.Locale;
 
@@ -21,6 +20,26 @@ public class SiteConfiguration implements Serializable {
     private String excludeFilter;
     private static final String BUNDLE = "resources.toppages";
     private boolean toBeUpdated = false;
+    private boolean titleFromHTML = false;
+    private String titleSeparator;
+
+    public boolean isTitleFromHTML() {
+        return titleFromHTML;
+    }
+
+    public void setTitleFromHTML(boolean titleFromHTML) {
+        this.titleFromHTML = titleFromHTML;
+    }
+
+
+    public String getTitleSeparator() {
+        return titleSeparator;
+    }
+
+    public void setTitleSeparator(String titleSeparator) {
+        this.titleSeparator = titleSeparator;
+    }
+
 
     public boolean isToBeUpdated() {
         return toBeUpdated;
@@ -34,11 +53,13 @@ public class SiteConfiguration implements Serializable {
     public SiteConfiguration() {
     }
 
-    public SiteConfiguration(String siteName, String reportUrl, String includeFilter, String excludeFilter) {
+    public SiteConfiguration(String siteName, String reportUrl, String includeFilter, String excludeFilter, boolean titleFromHTML, String titleSeparator) {
         this.siteName = siteName;
         this.reportUrl = reportUrl;
         this.includeFilter = includeFilter;
         this.excludeFilter = excludeFilter;
+        this.titleFromHTML = titleFromHTML;
+        this.titleSeparator = titleSeparator;
     }
 
     public String getSiteName() {

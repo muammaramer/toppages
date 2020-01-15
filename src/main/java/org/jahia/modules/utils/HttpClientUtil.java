@@ -30,8 +30,8 @@ public class HttpClientUtil {
             CloseableHttpResponse response = httpClient.execute(request);
 
             if (response.getStatusLine().getStatusCode() != 200) {
-                this.errorMessage = "Error while connecting to awStats, please check your server url";
-                logger.error("Error while getting the aws report page, HTTP Status {} ", response.getStatusLine());
+                this.errorMessage = "Error while connecting to url, please check if the url is correct";
+                logger.error("EError while connecting to url: {}, please check if the url is correct, HTTP Status {} ", uriBuilder.toString(), response.getStatusLine());
                 return null;
             }
             HttpEntity entity = response.getEntity();
@@ -40,8 +40,8 @@ public class HttpClientUtil {
             }
             response.close();
         } catch (IOException | URISyntaxException e) {
-            this.errorMessage = "Error while connecting to awStats url";
-            logger.error("Error while connecting to awStats URL: {}", uriBuilder.toString(), e);
+            this.errorMessage = "Error while connecting to url";
+            logger.error("Error while connecting to URL: {}", uriBuilder.toString(), e);
         }
 
         return result;
@@ -51,6 +51,11 @@ public class HttpClientUtil {
         this.httpClient.close();
     }
 
+    /**
+     * A method to test if awStats url is reachable
+     * @param uriBuilder
+     * @return true if response code is 200
+     */
     public boolean testConnection(URIBuilder uriBuilder) {
         try {
             HttpGet request = new HttpGet(uriBuilder.build());

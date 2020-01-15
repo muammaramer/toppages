@@ -24,5 +24,4 @@ public class UpdateTopPagesAction extends Action {
         return new ActionResult(HttpServletResponse.SC_OK, null, result );
     }
 
-
 }

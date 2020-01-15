@@ -62,7 +62,7 @@ public class SiteconfigFlowHandler implements Serializable {
                             }
 
                             for (JCRNodeWrapper site : sitesNode.getNodes()) {
-                                sitesModel.addSiteConfig(new SiteConfiguration(site.getName(), site.getProperty("awStatsUrl").getString(), site.getProperty("includeFilter").getString(), site.getPropertyAsString("excludeFilter")));
+                                sitesModel.addSiteConfig(new SiteConfiguration(site.getName(), site.getProperty("awStatsUrl").getString(), site.getProperty("includeFilter").getString(), site.getPropertyAsString("excludeFilter"),site.getProperty("titleFromHTML").getBoolean(),site.getPropertyAsString("titleSeparator")));
 
                             }
                             session.save();
@@ -94,6 +94,8 @@ public class SiteconfigFlowHandler implements Serializable {
         final String url = site.getReportUrl();
         final String includeFilter = site.getIncludeFilter();
         final String excludeFilter = site.getExcludeFilter();
+        final boolean titleFromHTML = site.isTitleFromHTML();
+        final String titleSeparator = site.getTitleSeparator();
         final MessageResolver itemAlreadyExistsMessage = site.getMessage("saveError", "toppages.form.error.alreadyExist");
         try {
 
@@ -125,7 +127,8 @@ public class SiteconfigFlowHandler implements Serializable {
                                         topPagesSite.setProperty("awStatsUrl", url);
                                         topPagesSite.setProperty("includeFilter", includeFilter);
                                         topPagesSite.setProperty("excludeFilter", excludeFilter);
-
+                                        topPagesSite.setProperty("titleFromHTML", titleFromHTML);
+                                        topPagesSite.setProperty("titleSeparator", titleSeparator);
                                     }
                                 }
                             } catch (ItemExistsException e) {
@@ -178,8 +181,7 @@ public class SiteconfigFlowHandler implements Serializable {
                                 logger.debug("Unable to get the selected configuration!", e);
                                 return null;
                             }
-
-                            SiteConfiguration config = new SiteConfiguration(siteNode.getName(), siteNode.getProperty("awStatsUrl").getString(), siteNode.getProperty("includeFilter").getString(), siteNode.getPropertyAsString("excludeFilter"));
+                            SiteConfiguration config = new SiteConfiguration(siteNode.getName(), siteNode.getProperty("awStatsUrl").getString(), siteNode.getProperty("includeFilter").getString(), siteNode.getPropertyAsString("excludeFilter"),siteNode.getProperty("titleFromHTML").getBoolean(),siteNode.getPropertyAsString("titleSeparator"));
                             config.setToBeUpdated(true);
 
                             if (logger.isDebugEnabled()) {
@@ -244,6 +246,8 @@ public class SiteconfigFlowHandler implements Serializable {
         final String url = siteConfig.getReportUrl();
         final String includeFilter = siteConfig.getIncludeFilter();
         final String excludeFilter = siteConfig.getExcludeFilter();
+        final boolean titleFromHTML = siteConfig.isTitleFromHTML();
+        final String titleSeparator = siteConfig.getTitleSeparator();
 
         try {
 
@@ -260,6 +264,8 @@ public class SiteconfigFlowHandler implements Serializable {
                                 topPagesSite.setProperty("awStatsUrl", url);
                                 topPagesSite.setProperty("includeFilter", includeFilter);
                                 topPagesSite.setProperty("excludeFilter", excludeFilter);
+                                topPagesSite.setProperty("titleFromHTML", titleFromHTML);
+                                topPagesSite.setProperty("titleSeparator", titleSeparator);
 
                                 session.save();
                             } catch (ItemExistsException e) {

@@ -17,6 +17,8 @@
  - jsonResult (string, text[resourceBundle]) hidden
  - lastErrorReceived (string) hidden
  - customCSS (string)
+ - titleFromHTML (boolean) = 'false'
+ - titleSeparator (string)
 
 [jtopmix:topPagesConfiguration] > jnt:content, jtopmix:JahiaTopPages, mix:title, jmix:studioOnly
 
@@ -25,4 +27,7 @@
  - awStatsUrl (string)
  - includeFilter (string)
  - excludeFilter (string)
+ - titleFromHTML (boolean) = 'false'
+ - titleSeparator (string)
+
 

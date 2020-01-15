@@ -66,6 +66,9 @@
                                 <th scope="col"> Report Url</th>
                                 <th scope="col"> Include Filter</th>
                                 <th scope="col"> Exclude Filter</th>
+                                <th scope="col"> Title from HTML</th>
+                                <th scope="col"> Separator</th>
+
                                 <th scope="col"> Action</th>
                                 </thead>
                                 <c:forEach items="${sitesConfigList}" var="site" varStatus="keys">
@@ -74,6 +77,8 @@
                                         <td>${site.reportUrl}</td>
                                         <td>${site.includeFilter}</td>
                                         <td>${site.excludeFilter}</td>
+                                        <td>${site.titleFromHTML}</td>
+                                        <td>${site.titleSeparator}</td>
                                         <td>
                                             <button id="editSiteConfig" class="fa fa-pencil" type="submit"
                                                     onClick="selectedRow('${site.siteName}')"

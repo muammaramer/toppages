@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <content xmlns:j="http://www.jahia.org/jahia/1.0" xmlns:jcr="http://www.jcp.org/jcr/1.0">
     <modules jcr:primaryType="jnt:modules">
-        <toppages j:dependencies="bootstrap3-core default"
+        <toppages j:dependencies="bootstrap3-core default serverSettings"
                 j:modulePriority="0"
                 j:moduleType="module"
                 j:title="topPages"
@@ -23,7 +23,7 @@
                             <community750 jcr:mimeType="image/png" jcr:primaryType="jnt:resource"/>
                         </next-page.png>
                         <top_pages_icon.png j:height="16"
-                                   j:width="17"
+                                   j:width="16"
                                    jcr:mixinTypes="jmix:image"
                                    jcr:primaryType="jnt:file">
                             <jcr:content jcr:mimeType="image/png" jcr:primaryType="jnt:resource"/>
@@ -33,36 +33,25 @@
                         </top_pages_icon.png>
                     </files>
                     <contents jcr:primaryType="jnt:contentFolder"/>
-                    <server-settings-base j:view="serverSettings" jcr:primaryType="jnt:template">
+                    <server-settings-base j:view="serverSettings"
+                                          jcr:mixinTypes="jmix:useUILocale"
+                                          jcr:primaryType="jnt:template">
                         <configurations j:hiddenTemplate="false"
                                j:icon="#/modules/serverSettings/templates/files/serveradmin/configurations/configurations.png"
                                j:titleKey="serverSettings.configurations"
-                               jcr:mixinTypes="jmix:rbTitle jmix:vanityUrlMapped"
-                               jcr:primaryType="jnt:pageTemplate">
-                            <content-template j:defaultTemplate="false"
-                                    j:hiddenTemplate="false"
-                                    j:icon="#/modules/toppages/templates/files/top_pages_icon.png"
-                                    j:titleKey="toppages.config.title"
-                                    jcr:mixinTypes="jmix:rbTitle"
-                                    jcr:primaryType="jnt:contentTemplate">
+                               jcr:mixinTypes="jmix:rbTitle"
+                               jcr:primaryType="jnt:template">
+                            <top-pages-configuration j:applyOn="jnt:globalSettings"
+                                       j:defaultTemplate="false"
+                                       j:hiddenTemplate="false"
+                                       j:icon="#/modules/toppages/templates/files/top_pages_icon.png"
+                                       j:titleKey="toppages.config.title"
+                                       jcr:mixinTypes="jmix:rbTitle"
+                                       jcr:primaryType="jnt:contentTemplate">
                                 <pagecontent jcr:primaryType="jnt:contentList">
                                     <top-pages-configuration jcr:primaryType="jtopmix:topPagesConfiguration"/>
                                 </pagecontent>
-                            </content-template>
-                            <vanityUrlMapping jcr:primaryType="jnt:vanityUrls">
-                                <configurations j:active="true"
-                                     j:default="false"
-                                     j:file="false"
-                                     j:url="/configurations"
-                                     jcr:language="en"
-                                     jcr:primaryType="jnt:vanityUrl"/>
-                                <configuration j:active="true"
-                                    j:default="true"
-                                    j:file="false"
-                                    j:url="/configuration"
-                                    jcr:language="en"
-                                    jcr:primaryType="jnt:vanityUrl"/>
-                            </vanityUrlMapping>
+                            </top-pages-configuration>
                         </configurations>
                     </server-settings-base>
                 </templates>

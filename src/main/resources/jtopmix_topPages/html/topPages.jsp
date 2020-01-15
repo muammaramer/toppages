@@ -18,13 +18,14 @@
 <%--@elvariable id="currentResource" type="org.jahia.services.render.Resource"--%>
 <%--@elvariable id="url" type="org.jahia.services.render.URLGenerator"--%>
 
-<template:addResources insert="false" type="javascript" resources="jquery.js"/>
+<template:addResources insert="false" type="css" resources="loader.css"/>
 
 <c:set var="getActionUrl" value="${url.base}${currentNode.path}.getTopPages.do"/>
 <c:set var="updateActionUrl" value="${url.base}${currentNode.path}.updateTopPages.do"/>
 <c:set var="parentName" value="${currentNode.parent.name}"/>
 <c:set var="resultDivID" value="result-${currentNode.name}-${parentName}"/>
 <c:set var="messagesDivID" value="messages-${currentNode.name}-${parentName}"/>
+<c:set var="loaderDivID" value="loader-${currentNode.name}-${parentName}"/>
 <c:set var="updateButtonID" value="updateBtn-${currentNode.name}-${parentName}"/>
 <c:set var="title" value="${currentNode.properties['jcr:title'].string}"/>
 <c:set var="customCSS" value="${currentNode.properties.customCss.string}"/>
@@ -42,34 +43,33 @@
         <div id="message">
         </div>
     </div>
+    <div id="${loaderDivID}" style="display: none;">
+        <span> Please wait, this may take sometime..</span>
+        <div class="loader" > <span> Please wait... </span></div>
+    </div>
     <button type="submit" id="${updateButtonID}" type="button" class="btn btn-primary"> Update Top Pages</button>
 </c:if>
-
 
 <div id="${resultDivID}">
 
 </div>
-
 <template:addResources>
     <script language="JavaScript">
         $(document).ready(function () {
-            var resultDiv = $('#${resultDivID}');
+            var resultDiv = $("#${resultDivID}");
             var messagesDiv = $("#${messagesDivID}");
-            var jsonResult = ${jsonResult};
+            var loaderDiv = $("#${loaderDivID}");
+            var jsonResult = ${empty jsonResult? "" : jsonResult};
             var title = "${title}";
-            getTopPages(jsonResult, resultDiv, messagesDiv, title);
+            if(jsonResult) {
+                displayResult(jsonResult, resultDiv, messagesDiv, title, false);
+            }
             $("#${updateButtonID}").click(function () {
                 updateTopPages("${updateActionUrl}", resultDiv, messagesDiv, title);
             });
-        });
-
-        function getTopPages(jsonResult, resultDiv, messagesDiv, title) {
-            if (jsonResult != null) {
-                displayResult(jsonResult, resultDiv, messagesDiv, title, false);
-            }
-        }
 
         function updateTopPages(actionUrl, resultDiv, messagesDiv, title) {
+            loaderDiv.show();
             $.getJSON(actionUrl,
                 function (result) {
                     if (result) {
@@ -91,6 +91,7 @@
                 });
                 divHtml += "</ul>";
             }
+            loaderDiv.hide();
             resultDiv.html(divHtml);
             if (text.errorMessages) {
                 var errors = result.errorMessages;
@@ -98,7 +99,7 @@
                 errors.forEach(function (msg) {
                     msgs += msg + "\n";
                 });
-                displayMessage(msgs, messagesDiv, "alert");
+                displayMessage(msgs, messagesDiv, "error");
                 return;
             }
 
@@ -115,7 +116,6 @@
                     messagesDiv.addClass("alert alert-success");
                 else if (alertType == "error")
                     messagesDiv.addClass("alert alert-danger");
-
                 messagesDiv.show();
             }
             messagesDiv.on("close.bs.alert", function () {
@@ -123,7 +123,7 @@
                 return false;
             });
         }
-
+        });
     </script>
 </template:addResources>
 

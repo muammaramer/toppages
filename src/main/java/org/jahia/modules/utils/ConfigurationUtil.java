@@ -8,14 +8,12 @@ import org.jahia.services.content.JCRTemplate;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Component;
 
 import javax.jcr.NodeIterator;
 import javax.jcr.PathNotFoundException;
 import javax.jcr.RepositoryException;
 import java.util.ArrayList;
 import java.util.List;
-
 
 public class ConfigurationUtil {
     static Logger logger = LoggerFactory.getLogger(ConfigurationUtil.class);
@@ -24,6 +22,7 @@ public class ConfigurationUtil {
     public void setKey(String key) {
         this.key = key;
     }
+
     public String getKey() {
         return key;
     }
@@ -31,7 +30,6 @@ public class ConfigurationUtil {
 
     @Autowired
     private JCRTemplate jcrTemplate;
-
 
     public void setJcrTemplate(JCRTemplate jcrTemplate) {
         this.jcrTemplate = jcrTemplate;
@@ -41,7 +39,6 @@ public class ConfigurationUtil {
 
         ArrayList<String> result = null;
         try {
-
             result = (ArrayList<String>) jcrTemplate.doExecuteWithSystemSession(
                     new JCRCallback() {
                         @Override
@@ -78,7 +75,6 @@ public class ConfigurationUtil {
 
         SiteConfiguration result = null;
         try {
-
             result = (SiteConfiguration) jcrTemplate.doExecuteWithSystemSession(
                     new JCRCallback() {
                         @Override
@@ -89,7 +85,8 @@ public class ConfigurationUtil {
                             try {
                                 siteNode = session.getNode("/settings/top-pages/" + siteName);
                                 if (siteNode != null) {
-                                    return new SiteConfiguration(siteNode.getName(), siteNode.getProperty("awStatsUrl").getString(), siteNode.getProperty("includeFilter").getString(), siteNode.getPropertyAsString("excludeFilter"));
+                                    return new SiteConfiguration(siteNode.getName(), siteNode.getProperty("awStatsUrl").getString(), siteNode.getProperty("includeFilter").getString(),
+                                            siteNode.getPropertyAsString("excludeFilter"), siteNode.getProperty("titleFromHTML").getBoolean(), siteNode.getPropertyAsString("titleSeparator"));
                                 }
                             } catch (PathNotFoundException e) {
                                 logger.debug("TopPages: Configuration Node does not exist in JCR", e);

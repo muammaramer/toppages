@@ -2,13 +2,7 @@ package org.jahia.modules;
 
 
 import org.apache.commons.lang.StringUtils;
-import org.apache.http.HttpEntity;
-import org.apache.http.client.methods.CloseableHttpResponse;
-import org.apache.http.client.methods.HttpGet;
 import org.apache.http.client.utils.URIBuilder;
-import org.apache.http.impl.client.CloseableHttpClient;
-import org.apache.http.impl.client.HttpClients;
-import org.apache.http.util.EntityUtils;
 import org.jahia.modules.models.SiteConfiguration;
 import org.jahia.modules.models.StatsPage;
 import org.jahia.modules.utils.ConfigurationUtil;
@@ -27,11 +21,12 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import javax.jcr.RepositoryException;
-import java.io.IOException;
 import java.net.URISyntaxException;
 import java.util.*;
 
 public class TopPages {
+
+
     Logger logger = LoggerFactory.getLogger(TopPages.class);
 
     @Autowired
@@ -57,15 +52,19 @@ public class TopPages {
     private static final String P_NMONTHS = "nMonths";
     private static final String P_LASTERROR = "lastErrorReceived";
     private static final String P_OVERRIDECONFIG = "overrideConfig";
+    private static final String P_TITLEFROMHTML = "titleFromHTML";
+    private static final String P_TITLESEPARATOR = "titleSeparator";
+
 
     /**
      * Get pages stats from awstats and update the statsPages map, if a page exists, the view count will be aggregated
+     * Awstats by default sorts the result by view count.
      *
      * @param numberOfResults number of items(pages) to get from the awstats report
      * @param uriBuilder      type of report from the jahiaSites map (academy, store, documentation)
      * @return a Map that contains the number of requeired resullts,
      */
-    public void getPages(long numberOfResults, HttpClientUtil httpclient, URIBuilder uriBuilder, Map<String, StatsPage> statsPagesMap) {
+    public void getPages(long numberOfResults, HttpClientUtil httpclient, URIBuilder uriBuilder, Map<String, StatsPage> statsPagesMap, boolean titleFromHTML, String titleSeparator) {
 
         String html = httpclient.getHtmlPage(uriBuilder);
         if (StringUtils.isEmpty(html)) {
@@ -79,9 +78,9 @@ public class TopPages {
             Element statsTable = doc.select("table.aws_data").get(1);
             // get rows from the second row row onwards, the first is for the table header!
             Elements statsRows = statsTable.select("tr:gt(0)");
-
+            //table rows iterator
             Iterator<Element> rowsIterator = statsRows.iterator();
-            while (rowsIterator.hasNext()) {
+            while (rowsIterator.hasNext() && numberOfResults-- > 0) {
                 Element row = rowsIterator.next();
                 Element link = row.select("td.aws>a[href]").first();
                 String linkHref = link.attr("href");
@@ -89,10 +88,25 @@ public class TopPages {
                 Element viewCountsCol = row.select("td:nth-child(2)").first();
                 String viewCountHtml = viewCountsCol.html().replace(",", ""); //remove comma
                 int viewCounts = Integer.parseInt(viewCountHtml);
+                String title = "";
+                if (titleFromHTML) {
+                    //Get page title tag from the page source
+                    URIBuilder uri = new URIBuilder(linkHref);
+                    String pageHtml = httpclient.getHtmlPage(uri);
+                    title = Jsoup.parse(pageHtml).title().trim();
+                    if (!StringUtils.isEmpty(title)) {
+                        if (!StringUtils.isEmpty(titleSeparator)) {
+                            int separatorIdx = title.indexOf(titleSeparator);
+                            if (separatorIdx > 0) {
+                                title = title.substring(0, title.indexOf(titleSeparator)).trim();
+                            }
+                        }
+                    }
+                } else {
+                    title = getTitleFromLink(linkHref);
+                }
 
-                String title = getTitleFromLink(linkHref);
                 StatsPage page = new StatsPage(linkHref, title, viewCounts);
-
                 //update the count if page already exists in the map
                 if (statsPagesMap.containsKey(title)) {
                     StatsPage p = statsPagesMap.get(title);
@@ -102,9 +116,6 @@ public class TopPages {
                     statsPagesMap.put(title, page);
                 }
 
-                if (--numberOfResults < 1) {
-                    break;
-                }
             }
 
         } catch (Exception e) {
@@ -123,7 +134,8 @@ public class TopPages {
      * @param uri:             uri of the awstats to get the pages for
      * @param nMonths:         the number of past months
      */
-    private JSONObject getTopPagesForNMonths(long numberOfResults, URIBuilder uri, long nMonths) {
+    private JSONObject getTopPagesForNMonths(long numberOfResults, URIBuilder uri, long nMonths,
+                                             boolean titleFromHTML, String titleSepartor) {
 
         HttpClientUtil httpClientUtil = new HttpClientUtil();
 
@@ -141,7 +153,7 @@ public class TopPages {
             uri.setParameter("year", String.valueOf(year));
             uri.setParameter("month", String.valueOf(month + 1)); //months starts at 0 in java Calendar
 
-            getPages(numberOfResults, httpClientUtil, uri, resultMap);
+            getPages(numberOfResults, httpClientUtil, uri, resultMap, titleFromHTML, titleSepartor);
 
             //previous month
             Calendar calNow = Calendar.getInstance();
@@ -175,44 +187,8 @@ public class TopPages {
         }
 
         return jsonResult;
-
-
     }
 
-
-    /**
-     * Get the HTML page source from a uri
-     *
-     * @param uriBuilder
-     * @return
-     */
-    public String getHtmlPage(URIBuilder uriBuilder) {
-
-
-        String result = null;
-        try (CloseableHttpClient httpClient = HttpClients.createDefault()) {
-
-            HttpGet request = new HttpGet(uriBuilder.build());
-            CloseableHttpResponse response = httpClient.execute(request);
-
-            if (response.getStatusLine().getStatusCode() != 200) {
-                this.errorMessages.put("Error while connecting to awStats, please check your server url");
-                logger.error("Error while getting the aws report page, HTTP Status: {}", response.getStatusLine());
-                return null;
-            }
-            HttpEntity entity = response.getEntity();
-            if (entity != null) {
-                result = EntityUtils.toString(entity);
-            }
-            response.close();
-        } catch (IOException | URISyntaxException e) {
-            this.errorMessages.put("Error while connecting to awStats url");
-            logger.error("Error while connecting to awStats URL: {} ", uriBuilder.toString(), e);
-        }
-
-
-        return result;
-    }
 
     /**
      * Return a title from a link
@@ -225,8 +201,9 @@ public class TopPages {
         String lastPart = linkHref.substring(idx, linkHref.length());
         lastPart = lastPart.replace(".html", "");
         lastPart = lastPart.replace("-", " ");
-        //capitalize first char
-        return lastPart.substring(0, 1).toUpperCase() + lastPart.substring(1).toLowerCase();
+        String title = lastPart.substring(0, 1).toUpperCase() + lastPart.substring(1).toLowerCase();
+
+        return StringUtils.capitalize(title);
     }
 
     /**
@@ -274,14 +251,15 @@ public class TopPages {
             String includeFilter = node.getPropertyAsString(P_INCLUDEFILTER);
             String excludeFilter = node.getPropertyAsString(P_EXCLUDEFILTER);
             String awStatsUrl = node.getPropertyAsString(P_AWSTATSURL);
+            boolean overRideConfig = node.getProperty(P_OVERRIDECONFIG).getBoolean();
+            boolean titleFromHtml = node.getProperty(P_TITLEFROMHTML).getBoolean();
+            String titleSeparator = node.getPropertyAsString(P_TITLESEPARATOR);
 
             if (configurationUtil == null) {
                 configurationUtil = (ConfigurationUtil) SpringContextSingleton.getBean("configurationUtil");
             }
 
             SiteConfiguration siteConfig = configurationUtil.getSiteConfig(reportName);
-
-            boolean overRideConfig = node.getProperty(P_OVERRIDECONFIG).getBoolean();
 
             if (!overRideConfig) {
                 if (siteConfig == null) {
@@ -297,12 +275,18 @@ public class TopPages {
                 awStatsUrl = siteConfig.getReportUrl();
                 node.setProperty(P_AWSTATSURL, awStatsUrl);
 
+                titleFromHtml = siteConfig.isTitleFromHTML();
+                node.setProperty(P_TITLEFROMHTML, titleFromHtml);
+
+                titleSeparator = siteConfig.getTitleSeparator();
+                node.setProperty(P_TITLESEPARATOR, titleSeparator);
+
             }
 
             long nMonths = node.getProperty(P_NMONTHS).getLong();
             long numberOfResults = node.getProperty(P_NUMBEROFRESULST).getLong();
             URIBuilder uri = buildReportUrl(awStatsUrl, includeFilter, excludeFilter);
-            JSONObject result = this.getTopPagesForNMonths(numberOfResults, uri, nMonths);
+            JSONObject result = this.getTopPagesForNMonths(numberOfResults, uri, nMonths, titleFromHtml, titleSeparator);
             if (result != null) {
                 node.setProperty(P_JSONRESULT, result.toString());
                 node.setProperty(P_LASTERROR, "");

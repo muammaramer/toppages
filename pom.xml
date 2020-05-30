@@ -60,6 +60,7 @@
   <description>This is a community module to get the top pages from awstats.</description>
   <properties>
     <jahia-depends>default,bootstrap3-core,serverSettings</jahia-depends>
+    <require-capability>osgi.extender;filter:="(osgi.extender=org.jahia.bundles.blueprint.extender.config)"</require-capability>
   </properties>
   <dependencies>
     <dependency>

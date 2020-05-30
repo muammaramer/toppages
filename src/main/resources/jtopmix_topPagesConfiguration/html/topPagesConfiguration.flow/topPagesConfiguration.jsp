@@ -34,8 +34,8 @@
             }
         }
     </script>
-
 </template:addResources>
+
 <jcr:node path="/sites" var="sitesVar"/>
 <div class="text-center"><h2><fmt:message key="toppages.config.title"/></h2></div>
 <div class="box-1">
@@ -44,6 +44,7 @@
             <div class="panel">
                 <div class="mt-1"><b> <fmt:message key="toppages.config.siteList"/></b></div>
                 <p class="text-justify h5"><br><fmt:message key="toppages.config.siteListDescription"/></p>
+
                 <form:form id="topPagesForm" class="form-horizontal"
                            modelAttribute="topPagesModel" method="post" action="${flowExecutionUrl}">
                     <div class="flex-row">
@@ -116,38 +117,43 @@
                         </button>
                     </div>
                     <div id="allTopPagesNodes">
-                        <c:if test="${not empty allNodes}">
-                            <table class="table table-bordered table-striped table-hover">
-                                <thead class="thead-ligh">
-                                <th scope="col"> Site Configuration Name</th>
-                                <th scope="col"> Node Name</th>
-                                <th scope="col"> Path</th>
-                                <th scope="col"> Last Published</th>
-                                <th scope="col"> Action</th>
-                                </thead>
-                                <c:forEach items="${allNodes}" var="node">
-                                    <tr>
-                                        <td> ${node.jahiaSite} </td>
-                                        <td> ${node.name} </td>
-                                        <td> ${node.path}</td>
-                                        <td>
-                                            <c:choose>
-                                                <c:when test="${empty node.lastPublished}">
-                                                    Not published
-                                                </c:when>
-                                                <c:otherwise>
-                                                    ${node.lastPublished}
-                                                </c:otherwise>
-                                            </c:choose>
-                                        </td>
-                                        <td>
-                                            <c:url value="${url.server}/cms/edit/default/${node.defaultLanguage}/${node.parentPage}.html"
-                                                   var="editUrl"/>
-                                            <a href="${editUrl}" target="_blank"> View Page </a></td>
-                                    </tr>
-                                </c:forEach>
-                            </table>
-                        </c:if>
+                        <c:choose>
+                        <c:when test="${empty allNodes}">
+                            <h2> <fmt:message key="toppages.allNodes.empty"> </fmt:message></h2>
+                        </c:when>
+                            <c:otherwise>
+                                <table class="table table-bordered table-striped table-hover">
+                                    <thead class="thead-ligh">
+                                    <th scope="col"> Site Configuration Name</th>
+                                    <th scope="col"> Node Name</th>
+                                    <th scope="col"> Path</th>
+                                    <th scope="col"> Last Published</th>
+                                    <th scope="col"> Action</th>
+                                    </thead>
+                                    <c:forEach items="${allNodes}" var="node">
+                                        <tr>
+                                            <td> ${node.jahiaSite} </td>
+                                            <td> ${node.name} </td>
+                                            <td> ${node.path}</td>
+                                            <td>
+                                                <c:choose>
+                                                    <c:when test="${empty node.lastPublished}">
+                                                        Not published
+                                                    </c:when>
+                                                    <c:otherwise>
+                                                        ${node.lastPublished}
+                                                    </c:otherwise>
+                                                </c:choose>
+                                            </td>
+                                            <td>
+                                                <c:url value="${url.server}/cms/edit/default/${node.defaultLanguage}/${node.parentPage}.html"
+                                                       var="editUrl"/>
+                                                <a href="${editUrl}" target="_blank"> View Page </a></td>
+                                        </tr>
+                                    </c:forEach>
+                                </table>
+                            </c:otherwise>
+                        </c:choose>
                     </div>
                 </form:form>
             </div>

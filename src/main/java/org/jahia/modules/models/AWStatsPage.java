@@ -2,13 +2,13 @@ package org.jahia.modules.models;
 
 import java.util.Objects;
 
-public class StatsPage implements Comparable<StatsPage> {
+public class AWStatsPage implements Comparable<AWStatsPage> {
 
     private String url;
     private String title;
     private long viewCount;
 
-    public StatsPage(String url, String title, long viewCount) {
+    public AWStatsPage(String url, String title, long viewCount) {
         this.url = url;
         this.title = title;
         this.viewCount = viewCount;
@@ -39,18 +39,18 @@ public class StatsPage implements Comparable<StatsPage> {
     }
 
     @Override
-    public int compareTo(StatsPage o) {
+    public int compareTo(AWStatsPage o) {
         return (int) (this.viewCount - o.viewCount);
     }
 
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
-        if (!(o instanceof StatsPage)) return false;
-        StatsPage statsPage = (StatsPage) o;
-        return viewCount == statsPage.viewCount &&
-                Objects.equals(url, statsPage.url) &&
-                Objects.equals(title, statsPage.title);
+        if (!(o instanceof AWStatsPage)) return false;
+        AWStatsPage AWStatsPage = (AWStatsPage) o;
+        return viewCount == AWStatsPage.viewCount &&
+                Objects.equals(url, AWStatsPage.url) &&
+                Objects.equals(title, AWStatsPage.title);
     }
 
     @Override

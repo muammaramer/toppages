@@ -7,6 +7,7 @@ import org.jahia.services.content.rules.AddedNodeFact;
  */
 public class TopPagesService {
     private String name;
+
     public void updateTopPages(AddedNodeFact fact){
         TopPages topPages= new TopPages();
         topPages.updateTopPages(fact.getNode());

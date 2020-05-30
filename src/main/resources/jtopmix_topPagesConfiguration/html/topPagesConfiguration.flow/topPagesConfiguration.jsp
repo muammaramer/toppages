@@ -34,8 +34,8 @@
             }
         }
     </script>
-
 </template:addResources>
+
 <jcr:node path="/sites" var="sitesVar"/>
 <div class="text-center"><h2><fmt:message key="toppages.config.title"/></h2></div>
 <div class="box-1">
@@ -44,6 +44,7 @@
             <div class="panel">
                 <div class="mt-1"><b> <fmt:message key="toppages.config.siteList"/></b></div>
                 <p class="text-justify h5"><br><fmt:message key="toppages.config.siteListDescription"/></p>
+
                 <form:form id="topPagesForm" class="form-horizontal"
                            modelAttribute="topPagesModel" method="post" action="${flowExecutionUrl}">
                     <div class="flex-row">

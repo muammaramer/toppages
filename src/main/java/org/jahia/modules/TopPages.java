@@ -4,7 +4,7 @@ package org.jahia.modules;
 import org.apache.commons.lang.StringUtils;
 import org.apache.http.client.utils.URIBuilder;
 import org.jahia.modules.models.SiteConfiguration;
-import org.jahia.modules.models.StatsPage;
+import org.jahia.modules.models.AWStatsPage;
 import org.jahia.modules.utils.ConfigurationUtil;
 import org.jahia.modules.utils.HttpClientUtil;
 import org.jahia.services.SpringContextSingleton;
@@ -25,7 +25,6 @@ import java.net.URISyntaxException;
 import java.util.*;
 
 public class TopPages {
-
 
     Logger logger = LoggerFactory.getLogger(TopPages.class);
 
@@ -64,7 +63,7 @@ public class TopPages {
      * @param uriBuilder      type of report from the jahiaSites map (academy, store, documentation)
      * @return a Map that contains the number of requeired resullts,
      */
-    public void getPages(long numberOfResults, HttpClientUtil httpclient, URIBuilder uriBuilder, Map<String, StatsPage> statsPagesMap, boolean titleFromHTML, String titleSeparator) {
+    public void getPages(long numberOfResults, HttpClientUtil httpclient, URIBuilder uriBuilder, Map<String, AWStatsPage> statsPagesMap, boolean titleFromHTML, String titleSeparator) {
 
         String html = httpclient.getHtmlPage(uriBuilder);
         if (StringUtils.isEmpty(html)) {
@@ -106,10 +105,10 @@ public class TopPages {
                     title = getTitleFromLink(linkHref);
                 }
 
-                StatsPage page = new StatsPage(linkHref, title, viewCounts);
+                AWStatsPage page = new AWStatsPage(linkHref, title, viewCounts);
                 //update the count if page already exists in the map
                 if (statsPagesMap.containsKey(title)) {
-                    StatsPage p = statsPagesMap.get(title);
+                    AWStatsPage p = statsPagesMap.get(title);
                     long newViewCount = p.getViewCount() + viewCounts;
                     p.setViewCount(newViewCount);
                 } else {
@@ -148,7 +147,7 @@ public class TopPages {
         int year = Calendar.getInstance().get(Calendar.YEAR);
         int month = Calendar.getInstance().get(Calendar.MONTH);
 
-        Map<String, StatsPage> resultMap = new HashMap<>();
+        Map<String, AWStatsPage> resultMap = new HashMap<>();
         while (nMonths-- > 0) {
             uri.setParameter("year", String.valueOf(year));
             uri.setParameter("month", String.valueOf(month + 1)); //months starts at 0 in java Calendar
@@ -163,14 +162,14 @@ public class TopPages {
 
         }
         // Sort the result
-        List<StatsPage> pagesList = new ArrayList<>(resultMap.values());
-        Collections.sort(pagesList, Collections.<StatsPage>reverseOrder());
+        List<AWStatsPage> pagesList = new ArrayList<>(resultMap.values());
+        Collections.sort(pagesList, Collections.<AWStatsPage>reverseOrder());
 
         //build JSONObject from the list with size of numberOfResults
         JSONObject jsonResult = new JSONObject();
         try {
             JSONArray pagesjsonArray = new JSONArray();
-            for (StatsPage sPage : pagesList) {
+            for (AWStatsPage sPage : pagesList) {
                 JSONObject page = new JSONObject();
                 page.put("title", sPage.getTitle());
                 page.put("href", sPage.getUrl());

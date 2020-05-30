@@ -117,11 +117,7 @@
                         </button>
                     </div>
                     <div id="allTopPagesNodes">
-                        <c:choose>
-                        <c:when test="${empty allNodes}">
-                            <h2> <fmt:message key="toppages.allNodes.empty"> </fmt:message></h2>
-                        </c:when>
-                            <c:otherwise>
+                        <c:if test="${not empty allNodes}">
                                 <table class="table table-bordered table-striped table-hover">
                                     <thead class="thead-ligh">
                                     <th scope="col"> Site Configuration Name</th>
@@ -152,8 +148,7 @@
                                         </tr>
                                     </c:forEach>
                                 </table>
-                            </c:otherwise>
-                        </c:choose>
+                            </c:if>
                     </div>
                 </form:form>
             </div>
